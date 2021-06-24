@@ -3,19 +3,31 @@ import { Editor, EditorState, RichUtils } from 'draft-js';
 import 'draft-js/dist/Draft.css';
 import ControlButtonsInline from './ControlButtonsInline';
 import ControlButtonsBlock from './ControlButtonsBlock';
+import { useDebouncedValue } from '../customHooks/useDebounce';
 
 export default function RichTextEditor() {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
+  const [fontSize, setFontSize] = useState('');
+  const [fontColor, setFontColor] = useState('');
+  const debouncedfontSizeValue = useDebouncedValue(fontSize, 1000); // this value will pick real time value, but will change it's result only when it's seattled for 1000ms
+  const debouncedfontColorValue = useDebouncedValue(fontColor, 1000);
+
+  useEffect(() => {
+    toggleFontSize(debouncedfontSizeValue);
+  }, [debouncedfontSizeValue]);
+
+  useEffect(() => {
+    toggleFontColor(debouncedfontColorValue);
+  }, [debouncedfontColorValue]);
 
   const editor = useRef(null);
-
   function focusEditor() {
     editor.current.focus();
   }
 
   const [customStyleMap, setCustomStyleMap] = useState({
     FONT_SIZE: {
-      fontSize: '30px',
+      fontSize: '100px',
     },
     FONT_COLOR: {
       color: '#000000',
@@ -53,9 +65,6 @@ export default function RichTextEditor() {
         color: customStyleMap.FONT_COLOR.color,
       },
     });
-    const newState = RichUtils.toggleInlineStyle(editorState, `${fontSize}px`);
-    // setEditorState(newState);
-    focusEditor();
   }
 
   useEffect(() => {
@@ -73,7 +82,7 @@ export default function RichTextEditor() {
       },
     });
     const newState = RichUtils.toggleInlineStyle(editorState, `#${hexCode}`);
-    setEditorState(newState);
+    // setEditorState(newState);
     focusEditor();
   }
 
@@ -89,7 +98,7 @@ export default function RichTextEditor() {
           type='text'
           placeholder='Font size (px)'
           id='fontSetter'
-          onBlur={(e) => toggleFontSize(e.target.value)}
+          onChange={(e) => setFontSize(e.target.value)}
         />
 
         <input
@@ -97,7 +106,7 @@ export default function RichTextEditor() {
           type='text'
           placeholder='Color Hex Code'
           id='fontColor'
-          onBlur={(e) => toggleFontColor(e.target.value)}
+          onChange={(e) => setFontColor(e.target.value)}
         />
 
         <ControlButtonsBlock
