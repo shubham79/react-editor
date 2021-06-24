@@ -41,14 +41,14 @@
   background: #fff;
   border: 1px solid rgb(59, 59, 122);
   font-family: 'Georgia', serif;
-  font-size: 14px;
+  /* font-size: 14px; */
   margin: 20px 20px;
 }
 
 .RichEditor-editor {
   /* border-top: 1px solid #ddd; */
   cursor: text;
-  font-size: 20px;
+  /* font-size: 20px; */
   margin-top: 10px;
 }
 
