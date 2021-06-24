@@ -17,6 +17,9 @@ export default function RichTextEditor() {
     FONT_SIZE: {
       fontSize: '30px',
     },
+    FONT_COLOR: {
+      color: '#000000',
+    },
   });
 
   /**
@@ -37,21 +40,42 @@ export default function RichTextEditor() {
   }
 
   function toggleFontSize(fontSize) {
+    const isNotNumber = isNaN(fontSize);
+    if (isNotNumber) {
+      alert('Please enter digits only');
+      return;
+    }
     setCustomStyleMap({
       FONT_SIZE: {
         fontSize: `${fontSize}px`,
       },
+      FONT_COLOR: {
+        color: customStyleMap.FONT_COLOR.color,
+      },
     });
     const newState = RichUtils.toggleInlineStyle(editorState, `${fontSize}px`);
-    setEditorState(newState);
+    // setEditorState(newState);
     focusEditor();
   }
 
   useEffect(() => {
     const newState = RichUtils.toggleInlineStyle(editorState, 'FONT_SIZE');
-    setEditorState(newState);
+    const newState2 = RichUtils.toggleInlineStyle(newState, 'FONT_COLOR');
+    setEditorState(newState2);
     focusEditor();
   }, [customStyleMap]);
+
+  function toggleFontColor(hexCode) {
+    setCustomStyleMap({
+      FONT_SIZE: { fontSize: customStyleMap.FONT_SIZE.fontSize },
+      FONT_COLOR: {
+        color: `#${hexCode}`,
+      },
+    });
+    const newState = RichUtils.toggleInlineStyle(editorState, `#${hexCode}`);
+    setEditorState(newState);
+    focusEditor();
+  }
 
   return (
     <div>
@@ -67,6 +91,15 @@ export default function RichTextEditor() {
           id='fontSetter'
           onBlur={(e) => toggleFontSize(e.target.value)}
         />
+
+        <input
+          className='RichEditor-styleButton'
+          type='text'
+          placeholder='Color Hex Code'
+          id='fontColor'
+          onBlur={(e) => toggleFontColor(e.target.value)}
+        />
+
         <ControlButtonsBlock
           editorState={editorState}
           onToggle={toggleBlockType}
