@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Editor, EditorState, RichUtils } from 'draft-js';
 import 'draft-js/dist/Draft.css';
-import ControlButtons from './ControlButtons';
+import ControlButtonsInline from './ControlButtonsInline';
+import ControlButtonsBlock from './ControlButtonsBlock';
 
 export default function RichTextEditor() {
   const [editorState, setEditorState] = useState(() =>
@@ -11,9 +12,24 @@ export default function RichTextEditor() {
   function toggleInlineStyle(inlineStyle) {
     setEditorState(RichUtils.toggleInlineStyle(editorState, inlineStyle));
   }
+
+  function toggleBlockType(blockType) {
+    setEditorState(RichUtils.toggleBlockType(editorState, blockType));
+  }
+
   return (
     <div>
-      <ControlButtons editorState={editorState} onToggle={toggleInlineStyle} />
+      <div className='RichEditor-controls'>
+        <ControlButtonsInline
+          editorState={editorState}
+          onToggle={toggleInlineStyle}
+        />
+        <ControlButtonsBlock
+          editorState={editorState}
+          onToggle={toggleBlockType}
+        />
+      </div>
+
       <div className='RichEditor-root'>
         <div className='RichEditor-editor'>
           <Editor

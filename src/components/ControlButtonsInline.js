@@ -7,10 +7,10 @@ const BUTTON_STYLES = [
   { label: 'Underline', style: 'UNDERLINE' },
 ];
 
-export default function ControlButtons(props) {
+export default function ControlButtonsInline(props) {
   const currentStyle = props.editorState.getCurrentInlineStyle();
   return (
-    <div className='RichEditor-controls'>
+    <>
       {BUTTON_STYLES.map((type) => (
         <StyleButton
           key={type.label}
@@ -20,6 +20,6 @@ export default function ControlButtons(props) {
           style={type.style}
         />
       ))}
-    </div>
+    </>
   );
 }
